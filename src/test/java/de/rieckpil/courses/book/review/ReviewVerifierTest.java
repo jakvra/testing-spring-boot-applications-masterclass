@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
@@ -39,19 +40,32 @@ class ReviewVerifierTest {
   @Test
   @DisplayName("Should fail when review contains 'lorem ipsum'")
   void testLoremIpsum() {
+    String review = "Lorem ipsum is simply dummy text of the printing and typesetting industry.";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertFalse(result, "ReviewVerifier did not detect lorem ipsum");
+
   }
 
   @ParameterizedTest
   @CsvFileSource(resources = "/badReview.csv")
-  void shouldFailWhenReviewIsOfBadQuality(String review) {
+  void shouldFailWhenReviewIsOfBadQuality(String review) throws InterruptedException {
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertFalse(result, "ReviewVerifier did not detect bad review");
   }
 
   @RepeatedTest(5)
   void shouldFailWhenRandomReviewQualityIsBad(@RandomReview String review) {
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertFalse(result, "ReviewVerifier did not detect random bad review");
   }
 
   @Test
   void shouldPassWhenReviewIsGood() {
+    String review = "I can totally recommend this book who is interested in learning how to write Java code";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertTrue(result, "ReviewVerifier did pass a good review");
   }
 
   @Test
