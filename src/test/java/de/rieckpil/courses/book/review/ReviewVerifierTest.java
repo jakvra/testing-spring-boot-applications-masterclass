@@ -1,6 +1,5 @@
 package de.rieckpil.courses.book.review;
 
-import org.assertj.core.api.Assertions;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
@@ -70,9 +68,29 @@ class ReviewVerifierTest {
 
   @Test
   void shouldPassWhenReviewIsGoodHamcrest() {
+    String review = "I can totally recommend this book who is interested in learning how to write Java code";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+//    assertTrue(result, "ReviewVerifier did pass a good review");  // JUnit 5
+    MatcherAssert.assertThat("ReviewVerifier did pass a good review", result, Matchers.equalTo(true));
+    MatcherAssert.assertThat("Lorem Ipsum", Matchers.endsWith("Ipsum"));
+    MatcherAssert.assertThat(List.of(1, 2, 3, 4, 5), Matchers.hasSize(5));
+    MatcherAssert.assertThat(List.of(1, 2, 3, 4, 5), Matchers.anyOf(Matchers.hasSize(5), Matchers.emptyIterable()));
+//    MatcherAssert.assertThat(List.of(1, 2, 3, 4, 5), Matchers.allOf(Matchers.hasSize(5), Matchers.emptyIterable()));
   }
 
   @Test
   void shouldPassWhenReviewIsGoodAssertJ() {
+    String review = "I can totally recommend this book who is interested in learning how to write Java code";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+//    assertTrue(result, "ReviewVerifier did pass a good review");  // JUnit 5
+    org.assertj.core.api.Assertions.assertThat(result)
+      .withFailMessage("ReviewVerifier did not pass a good review")
+      .isEqualTo(true)
+      .isTrue();
+
+    org.assertj.core.api.Assertions.assertThat(List.of(1, 2, 3, 4, 5)).hasSizeBetween(1, 10);
+    org.assertj.core.api.Assertions.assertThat(List.of(1, 2, 3, 4, 5)).contains(3).isNotEmpty();
   }
 }
